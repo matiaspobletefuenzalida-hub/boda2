@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Boda - Paulette y Matías</title>
+    
+    <!-- Fuentes Elegantes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-cream': '#F9F8F3',     
+                        'text-green': '#2C3A30',   
+                        'accent-gold': '#C5A87C',  
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        script: ['"Alex Brush"', 'cursive'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'envelope': '0 30px 60px rgba(44, 58, 48, 0.2)',
+                        'seal': '0 4px 15px rgba(0,0,0,0.2)',
+                        'card': '0 25px 50px -12px rgba(0, 0, 0, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* ================= CONFIGURACIONES GLOBALES ================= */
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #2C3A30; 
+            color: #2C3A30;
+            touch-action: none;
+        }
+
+        /* Ocultar barra de scroll pero permitir scroll (para la última pantalla) */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Textura de papel sutil */
+        .paper-texture {
+            position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0.3;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+            mix-blend-mode: multiply;
+        }
+
+        /* ================= ANIMACIONES DEL SOBRE ================= */
+        .envelope-container { perspective: 1200px; }
+        .envelope { transform-style: preserve-3d; position: relative; }
+        .flap-top {
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            transform-origin: top;
+            transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 40;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.08));
+        }
+        .flap-bottom {
+            clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
+            z-index: 30;
+            filter: drop-shadow(0 -2px 15px rgba(0,0,0,0.05));
+        }
+        .seal { transition: opacity 0.5s ease, transform 0.5s ease; z-index: 50; }
+        .flap-open { transform: rotateX(180deg); }
+        .seal-broken { opacity: 0; transform: scale(1.5) translate(-50%, -50%); pointer-events: none; }
+        .letter-content { transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease; z-index: 20; }
+        .letter-extracted { transform: translateY(-80%); }
+
+        #intro-screen { transition: opacity 1.2s ease, visibility 1.2s ease; }
+        #video-container { opacity: 0; visibility: hidden; transition: opacity 1.5s ease 0.5s; }
+        #video-container.visible { opacity: 1; visibility: visible; }
+
+        /* ================= DIVISORES MINIMALISTAS ================= */
+        .elegant-divider {
+            width: 100%; max-width: 120px; height: 1px;
+            background: linear-gradient(90deg, transparent, #C5A87C, transparent);
+            position: relative; margin: 1.5rem auto; opacity: 0.8;
+        }
+
+        /* ================= ESTILOS DEL SLIDER (VIDEO) ================= */
+        .slide {
+            position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out;
+            transform: scale(0.98); padding-inline: 2rem; z-index: 20;
+        }
+        .slide.active { opacity: 1; visibility: visible; transform: scale(1); }
+
+        .progress-bar-container {
+            position: absolute; top: 35px; left: 50%; transform: translateX(-50%);
+            width: 75%; max-width: 300px; display: flex; gap: 4px; z-index: 50;
+        }
+        .progress-segment {
+            flex: 1; height: 2px; background: rgba(197, 168, 124, 0.25); border-radius: 2px; overflow: hidden;
+        }
+        .progress-fill { height: 100%; width: 0%; background: #C5A87C; transition: width 0.1s linear; }
+        .progress-segment.completed .progress-fill { width: 100%; }
+
+        .click-zone { position: absolute; top: 0; bottom: 0; z-index: 40; cursor: pointer; }
+        .click-zone.left { left: 0; width: 35%; }
+        .click-zone.right { right: 0; width: 65%; }
+        .no-clicks .click-zone { display: none; }
+    </style>
+</head>
+<body class="selection:bg-[#C5A87C] selection:text-white">
+
+    <!-- AUDIO DE LA BODA -->
+    <audio id="musica-boda" src="boda.mp3" loop></audio>
+
+    <!-- ========================================== -->
+    <!-- PANTALLA 1: SOBRE DE LUJO MINIMALISTA      -->
+    <!-- ========================================== -->
+    <div id="intro-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-bg-cream">
+        
+        <div class="paper-texture"></div>
+
+        <div class="envelope-container w-[90vw] max-w-[500px] aspect-[3/2] relative mb-12 z-10">
+            <div class="envelope w-full h-full">
+                <div class="absolute inset-0 bg-[#8E9B83] rounded-sm shadow-envelope"></div>
+                <div id="letter" class="letter-content absolute top-2 bottom-2 left-2 right-2 bg-bg-cream flex flex-col items-center justify-center p-6 overflow-hidden border border-accent-gold/20">
+                    <div class="w-full h-full border border-accent-gold/30 flex flex-col items-center justify-center p-4">
+                        <span class="font-serif text-text-green text-5xl mb-3 font-light">P<span class="text-3xl mx-2 text-accent-gold italic">&</span>M</span>
+                        <div class="w-16 h-[1px] bg-accent-gold/50 mb-3"></div>
+                        <span class="text-text-green text-[9px] tracking-[0.4em] uppercase font-sans">Nuestra Boda</span>
+                    </div>
+                </div>
+                <div class="flap-bottom absolute inset-0 bg-[#738367] rounded-b-sm"></div>
+                <div id="flap-top" class="flap-top absolute top-0 left-0 w-full h-[65%] bg-[#8E9B83] rounded-t-sm"></div>
+                
+                <div id="seal" class="seal absolute top-[65%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-gradient-to-br from-[#C9A86A] to-[#B8945E] shadow-seal border border-white/20 flex items-center justify-center z-50">
+                    <div class="absolute inset-1 rounded-full border border-[#8B7D70]/30"></div>
+                    <span class="font-serif text-[#F9F8F3] text-xl drop-shadow-sm z-10">P&M</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="login-area" class="z-50 text-center px-4 max-w-lg transition-opacity duration-500">
+            <label for="guest-name" class="block font-sans font-light text-text-green/80 text-[10px] tracking-[0.3em] uppercase mb-6">
+                Ingresa tu nombre para comenzar
+            </label>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <input type="text" id="guest-name" class="bg-transparent border-b border-accent-gold/60 px-4 py-2 w-full sm:w-64 text-center font-serif text-text-green text-xl outline-none focus:border-text-green transition-all placeholder-text-green/30" placeholder="Familia o Invitado">
+                <button onclick="openEnvelope()" class="bg-text-green text-white font-sans font-light px-8 py-3 w-full sm:w-auto hover:bg-[#1f2922] transition-colors tracking-widest uppercase text-[10px] rounded-sm shadow-md">
+                    Entrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- PANTALLA 2: MODO VIDEO (TARJETA + FONDO)   -->
+    <!-- ========================================== -->
+    <div id="video-container" class="fixed inset-0">
+        
+        <!-- IMAGEN DE FONDO LOCAL INTELIGENTE -->
+        <div class="absolute inset-0 z-0 bg-[#2C3A30]">
+            <img src="fondo.jpg" id="bg-blur" class="absolute inset-0 w-full h-full object-cover opacity-50 blur-2xl transition-opacity duration-1000 hidden" alt="">
+            <img src="fondo.jpg" id="bg-image" class="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-1000" alt="Fondo de los Novios">
+        </div>
+        <div class="absolute inset-0 bg-black/30 z-0 pointer-events-none"></div>
+
+        <!-- LA TARJETA CENTRAL -->
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-[420px] h-[86vh] max-h-[800px] bg-bg-cream/95 backdrop-blur-md shadow-card z-10 flex flex-col items-center justify-center overflow-hidden">
+            
+            <div class="paper-texture"></div>
+
+            <!-- MARCO DOBLE -->
+            <div class="absolute inset-[15px] pointer-events-none z-40">
+                <div class="absolute inset-0 border border-accent-gold/80"></div>
+                <div class="absolute inset-[6px] border border-accent-gold/80 rounded-2xl"></div>
+            </div>
+
+            <!-- CONTROLES -->
+            <div id="progress-container" class="progress-bar-container"></div>
+            <div id="video-controls">
+                <div class="click-zone left" onclick="prevSlide()"></div>
+                <div class="click-zone right" onclick="nextSlide(true)"></div>
+            </div>
+
+            <!-- ================= SLIDES (CONTENIDO) ================= -->
+            <div id="slides-container" class="absolute inset-0 z-20 pointer-events-none">
+                
+                <!-- SLIDE 0: Portada -->
+                <div class="slide">
+                    <p class="font-sans text-accent-gold text-[10px] tracking-[0.4em] uppercase mb-6 font-medium">Nos casamos</p>
+                    <h1 class="font-script text-5xl md:text-6xl text-text-green leading-none">Paulette</h1>
+                    <span class="font-serif text-2xl md:text-3xl text-accent-gold italic my-4">&</span>
+                    <h1 class="font-script text-5xl md:text-6xl text-text-green leading-none">Matías</h1>
+                    <div class="elegant-divider mt-10"></div>
+                </div>
+
+                <!-- SLIDE 1: Frase -->
+                <div class="slide">
+                    <p class="font-serif text-text-green text-2xl md:text-3xl leading-relaxed italic text-center max-w-[280px]">
+                        "Porque son parte de nuestra vida, es nuestro deseo que compartan con nosotros en este día tan especial."
+                    </p>
+                    <div class="elegant-divider mt-8 mb-6"></div>
+                    <div class="text-center">
+                        <p class="font-sans text-accent-gold text-[9px] tracking-[0.3em] uppercase mb-2">Especialmente para</p>
+                        <span id="display-guest-name" class="font-serif text-text-green text-xl italic block">Familia</span>
+                    </div>
+                </div>
+
+                <!-- SLIDE 2: Fecha (Actualizada a Noviembre) -->
+                <div class="slide">
+                    <p class="font-sans text-accent-gold text-[9px] tracking-[0.4em] uppercase mb-10">Reserva la fecha</p>
+                    <div class="flex items-center justify-center gap-6">
+                        <div class="flex flex-col items-end border-r border-accent-gold/40 pr-6">
+                            <span class="font-sans text-text-green tracking-[0.2em] uppercase text-xs font-light">Noviembre</span>
+                            <span class="font-serif text-accent-gold tracking-widest uppercase text-sm mt-1">Sábado</span>
+                        </div>
+                        <span class="font-serif text-8xl md:text-9xl text-text-green leading-none font-light">14</span>
+                        <div class="flex flex-col items-start border-l border-accent-gold/40 pl-6">
+                            <span class="font-sans text-text-green tracking-[0.2em] uppercase text-xs font-light">2026</span>
+                            <span class="font-serif text-accent-gold tracking-widest uppercase text-sm mt-1">19:00 H.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 3: Ubicaciones (Actualizada dirección de recepción a Nilcunlauta 2727) -->
+                <div class="slide pointer-events-auto">
+                    <div class="w-full flex flex-col gap-10 text-center">
+                        <div class="flex flex-col items-center">
+                            <p class="font-sans text-accent-gold text-[9px] tracking-[0.3em] uppercase mb-2">Ceremonia • 19:00 h.</p>
+                            <h3 class="font-serif text-text-green text-2xl leading-tight mb-2">Parroquia<br>San Fernando Rey</h3>
+                            <p class="font-sans text-text-green/70 text-[9px] tracking-[0.2em] uppercase mb-3">Frente a Plaza de Armas</p>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Parroquia+San+Fernando+Rey+San+Fernando+Chile" target="_blank" class="relative z-50 font-sans text-[8px] tracking-[0.2em] text-text-green uppercase border-b border-text-green/30 pb-0.5 hover:text-accent-gold hover:border-accent-gold transition-colors">
+                                Ver Mapa
+                            </a>
+                        </div>
+                        
+                        <div class="elegant-divider my-0"></div>
+
+                        <div class="flex flex-col items-center">
+                            <p class="font-sans text-accent-gold text-[9px] tracking-[0.3em] uppercase mb-2">Recepción • 21:00 h.</p>
+                            <h3 class="font-serif text-text-green text-2xl leading-tight mb-2">Centro de Eventos<br>"El Quincho"</h3>
+                            <p class="font-sans text-text-green/70 text-[9px] tracking-[0.2em] uppercase mb-3">Nilcunlauta 2727</p>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Nilcunlauta+2727+San+Fernando+Chile" target="_blank" class="relative z-50 font-sans text-[8px] tracking-[0.2em] text-text-green uppercase border-b border-text-green/30 pb-0.5 hover:text-accent-gold hover:border-accent-gold transition-colors">
+                                Ver Mapa
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 4: Regalos, Dress Code y RSVP con Responder antes del 1 de octubre Destacado -->
+                <div class="slide pointer-events-auto overflow-y-auto scrollbar-hide" style="justify-content: flex-start; padding-top: 15%;">
+                    
+                    <div class="w-full flex flex-col items-center text-center max-w-[280px] mx-auto pb-10">
+                        <h2 class="font-script text-4xl md:text-5xl text-text-green mb-1 shrink-0">¡Te esperamos!</h2>
+                        
+                        <!-- Dress Code -->
+                        <div class="mt-4 mb-2 w-full text-center">
+                            <p class="font-sans text-accent-gold tracking-[0.2em] uppercase text-[7px] mb-0.5 font-medium">Dress Code</p>
+                            <p class="font-serif text-text-green text-sm italic">Formal</p>
+                        </div>
+                        
+                        <div class="elegant-divider my-2 w-full"></div>
+
+                        <!-- Lluvia de Sobres / Transferencia (Explicación Directa) -->
+                        <p class="font-sans text-accent-gold tracking-[0.2em] uppercase text-[8px] mt-4 mb-2 font-medium">Mesa de Regalos</p>
+                        <p class="font-serif text-text-green text-[11px] leading-relaxed italic mb-4">
+                            "El mejor regalo para nosotros es su compañía. Si desean entregarnos un obsequio, les agradeceríamos que fuera en dinero para nuestros nuevos proyectos. Habrá un buzón el día del evento, o pueden transferir a:"
+                        </p>
+
+                        <!-- Caja de datos bancarios de Paulette -->
+                        <div class="w-full bg-white/50 p-3 rounded-sm border border-accent-gold/40 shadow-sm text-center mb-2 relative z-50">
+                            <div class="font-sans text-text-green/90 text-[8px] tracking-widest uppercase space-y-1.5 text-left px-2">
+                                <p><span class="font-medium text-accent-gold">Nombre:</span> Paulette Fuenzalida Hidalgo</p>
+                                <p><span class="font-medium text-accent-gold">Banco:</span> Banco Estado</p>
+                                <p><span class="font-medium text-accent-gold">Cuenta:</span> 19.874.633-9</p>
+                                <p><span class="font-medium text-accent-gold">Celular:</span> +569 53244107</p>
+                            </div>
+                        </div>
+
+                        <div class="elegant-divider my-4 w-full"></div>
+
+                        <!-- Formulario RSVP Inteligente al final de todo (Texto de fecha destacado y rediseñado) -->
+                        <p class="font-sans text-accent-gold text-[9.5px] tracking-[0.18em] uppercase mb-4 mt-2 font-semibold border-b border-accent-gold/25 pb-1">
+                            Responder antes del 1 de octubre, lo agradeceríamos
+                        </p>
+
+                        <form id="rsvp-form" class="w-full space-y-4 text-center relative z-50">
+                            
+                            <!-- Contenedor dinámico que cargará los nombres de los familiares del invitado -->
+                            <div id="dynamic-family-inputs" class="space-y-3 mb-4">
+                                <input type="text" id="rsvp-name" class="w-full bg-transparent border-b border-text-green/30 py-1.5 font-serif text-text-green text-center text-sm outline-none focus:border-accent-gold transition-colors placeholder-text-green/40" placeholder="Tu nombre completo" required>
+                                
+                                <div class="flex justify-center gap-5 font-sans text-[8px] tracking-widest text-text-green uppercase mt-3">
+                                    <label class="flex items-center gap-1.5 cursor-pointer">
+                                        <input type="radio" name="attendance" value="yes" class="accent-text-green" required> Sí, asistiré
+                                    </label>
+                                    <label class="flex items-center gap-1.5 cursor-pointer">
+                                        <input type="radio" name="attendance" value="no" class="accent-text-green"> No asistiré
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" id="submit-btn" class="bg-text-green text-white font-sans text-[8px] tracking-[0.2em] uppercase py-2.5 px-8 mt-4 hover:bg-[#1f2922] transition-colors duration-300 w-full shadow-sm">
+                                Confirmar
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Lógica -->
+    <script>
+        // ======================================================================
+        // BASE DE DATOS DE INVITADOS (Puedes expandirla aquí)
+        // Instrucciones: Escribe el nombre del invitado clave en minúsculas y sin acentos
+        // como "llave" de búsqueda, y en la lista define los nombres de su familia.
+        // ======================================================================
+        const GUEST_DATABASE = {
+            "perez": {
+                familyDisplay: "Familia Pérez",
+                members: ["Juan Pérez", "María Pérez", "Sofía Pérez"]
+            },
+            "juan perez": {
+                familyDisplay: "Familia Pérez",
+                members: ["Juan Pérez", "María Pérez", "Sofía Pérez"]
+            },
+            "paulette fuenzalida": {
+                familyDisplay: "Familia Fuenzalida",
+                members: ["Paulette Fuenzalida", "Matías Poblete", "Invitado Especial"]
+            },
+            "matias poblete": {
+                familyDisplay: "Familia Poblete",
+                members: ["Matías Poblete", "Paulette Fuenzalida"]
+            }
+        };
+
+        let currentSlide = 0;
+        let slides = [];
+        let progressSegments = [];
+        let slideInterval;
+        const timePerSlide = 6500; 
+        let progressAnimation;
+        let matchedFamily = null; // Guardará la familia si es detectada
+
+        // Normalizar texto para la búsqueda inteligente
+        function cleanText(text) {
+            return text.toLowerCase()
+                       .trim()
+                       .normalize("NFD")
+                       .replace(/[\u0300-\u036f]/g, ""); // Remueve acentos y tildes
+        }
+
+        function openEnvelope() {
+            // Reproducir música al hacer clic
+            const audio = document.getElementById('musica-boda');
+            if (audio) {
+                audio.play().catch(error => console.log("La reproducción automática fue bloqueada:", error));
+            }
+
+            const guestNameInput = document.getElementById('guest-name').value.trim();
+            const cleanedInput = cleanText(guestNameInput);
+            
+            // Buscar en nuestra base de datos inteligente
+            matchedFamily = GUEST_DATABASE[cleanedInput] || null;
+
+            if (matchedFamily) {
+                document.getElementById('display-guest-name').textContent = matchedFamily.familyDisplay;
+                buildDynamicForm(matchedFamily.members);
+            } else {
+                document.getElementById('display-guest-name').textContent = guestNameInput ? guestNameInput : 'Familia y Amigos';
+                buildSingleForm(guestNameInput);
+            }
+
+            document.getElementById('login-area').style.opacity = '0';
+            setTimeout(() => document.getElementById('seal').classList.add('seal-broken'), 400);
+            setTimeout(() => document.getElementById('flap-top').classList.add('flap-open'), 800);
+            setTimeout(() => document.getElementById('letter').classList.add('letter-extracted'), 1500);
+
+            setTimeout(() => {
+                document.getElementById('intro-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('intro-screen').style.display = 'none';
+                    document.getElementById('video-container').classList.add('visible');
+                    initVideo();
+                }, 1200); 
+            }, 2800);
+        }
+
+        // Construir la encuesta RSVP de forma automática para toda la familia
+        function buildDynamicForm(members) {
+            const container = document.getElementById('dynamic-family-inputs');
+            container.innerHTML = `
+                <p class="font-sans text-[8px] tracking-[0.2em] text-accent-gold uppercase mb-4 text-center font-semibold">Confirmación por integrante</p>
+                <div class="space-y-4 border-t border-b border-accent-gold/20 py-4 mb-4 text-left">
+            `;
+            
+            members.forEach((member, index) => {
+                container.innerHTML += `
+                    <div class="flex items-center justify-between text-left py-1">
+                        <span class="font-serif text-sm text-text-green font-medium">${member}</span>
+                        <div class="flex gap-4 font-sans text-[8px] tracking-widest text-text-green uppercase">
+                            <label class="flex items-center gap-1 cursor-pointer">
+                                <input type="radio" name="attendance-${index}" value="Sí" class="accent-text-green" required> Sí
+                            </label>
+                            <label class="flex items-center gap-1 cursor-pointer">
+                                <input type="radio" name="attendance-${index}" value="No" class="accent-text-green"> No
+                            </label>
+                        </div>
+                        <input type="hidden" name="Invitado_${index + 1}" value="${member}">
+                    </div>
+                `;
+            });
+
+            container.innerHTML += `</div>`;
+            
+            // Pausar avance cuando interactúen con los radios de la familia
+            setTimeout(() => {
+                container.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        clearInterval(slideInterval);
+                        cancelAnimationFrame(progressAnimation);
+                        progressSegments[currentSlide].style.width = '100%';
+                    });
+                });
+            }, 500);
+        }
+
+        // Si es un invitado común que no está en la base de datos
+        function buildSingleForm(name) {
+            const container = document.getElementById('dynamic-family-inputs');
+            container.innerHTML = `
+                <input type="text" name="Nombre" id="rsvp-name" class="w-full bg-transparent border-b border-text-green/30 py-1.5 font-serif text-text-green text-center text-sm outline-none focus:border-accent-gold transition-colors placeholder-text-green/40" placeholder="Tu nombre completo" required>
+                
+                <div class="flex justify-center gap-5 font-sans text-[8px] tracking-widest text-text-green uppercase mt-3">
+                    <label class="flex items-center gap-1.5 cursor-pointer">
+                        <input type="radio" name="Asistencia" value="Sí" class="accent-text-green" required> Sí, asistiré
+                    </label>
+                    <label class="flex items-center gap-1.5 cursor-pointer">
+                        <input type="radio" name="Asistencia" value="No" class="accent-text-green"> No asistiré
+                    </label>
+                </div>
+            `;
+            document.getElementById('rsvp-name').value = name;
+
+            // Pausar video cuando escriban
+            document.getElementById('rsvp-name').addEventListener('focus', function() {
+                clearInterval(slideInterval);
+                cancelAnimationFrame(progressAnimation);
+                progressSegments[currentSlide].style.width = '100%';
+            });
+        }
+
+        function initVideo() {
+            slides = document.querySelectorAll('.slide');
+            const progressContainer = document.getElementById('progress-container');
+            
+            slides.forEach((_, index) => {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment';
+                seg.innerHTML = '<div class="progress-fill" id="fill-'+index+'"></div>';
+                progressContainer.appendChild(seg);
+                progressSegments.push(document.getElementById('fill-'+index));
+            });
+
+            showSlide(0);
+        }
+
+        function showSlide(index) {
+            clearInterval(slideInterval);
+            cancelAnimationFrame(progressAnimation);
+
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (i < index) {
+                    progressSegments[i].style.width = '100%';
+                    progressSegments[i].parentElement.classList.add('completed');
+                } else {
+                    progressSegments[i].style.width = '0%';
+                    progressSegments[i].parentElement.classList.remove('completed');
+                }
+            });
+
+            slides[index].classList.add('active');
+            currentSlide = index;
+
+            if (index === slides.length - 1) {
+                document.getElementById('video-controls').classList.add('no-clicks');
+                progressSegments[index].style.width = '100%';
+                return; 
+            }
+
+            let start = null;
+            function step(timestamp) {
+                if (!start) start = timestamp;
+                let progress = timestamp - start;
+                let percentage = Math.min((progress / timePerSlide) * 100, 100);
+                progressSegments[index].style.width = percentage + '%';
+                
+                if (progress < timePerSlide) {
+                    progressAnimation = requestAnimationFrame(step);
+                }
+            }
+            progressAnimation = requestAnimationFrame(step);
+
+            slideInterval = setInterval(() => { nextSlide(false); }, timePerSlide);
+        }
+
+        function nextSlide(manual = false) {
+            if (currentSlide < slides.length - 1) showSlide(currentSlide + 1);
+        }
+        function prevSlide() {
+            if (currentSlide > 0) showSlide(currentSlide - 1);
+        }
+
+        // --- PAUSAR EL VIDEO AL ESCRIBIR ---
+        document.getElementById('rsvp-name').addEventListener('focus', function() {
+            clearInterval(slideInterval);
+            cancelAnimationFrame(progressAnimation);
+            progressSegments[currentSlide].style.width = '100%';
+        });
+
+        // Respuesta del Formulario
+        document.getElementById('rsvp-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            this.innerHTML = `
+                <div class="text-center py-6 mt-4">
+                    <p class="text-4xl font-script text-text-green mb-2">¡Gracias!</p>
+                    <p class="font-sans text-accent-gold text-[9px] tracking-[0.3em] uppercase">Respuesta confirmada con éxito.</p>
+                </div>
+            `;
+        });
+
+        // Lógica de Adaptación de Fondo
+        function adaptarFondo() {
+            const bgImage = document.getElementById('bg-image');
+            const bgBlur = document.getElementById('bg-blur');
+            if (!bgImage) return;
+
+            const imgTemp = new Image();
+            imgTemp.src = bgImage.src;
+            
+            imgTemp.onload = function() {
+                const imgRatio = imgTemp.naturalWidth / imgTemp.naturalHeight;
+                const windowRatio = window.innerWidth / window.innerHeight;
+                
+                const isImgLandscape = imgRatio > 1;
+                const isWindowLandscape = windowRatio > 1;
+                
+                if (isImgLandscape !== isWindowLandscape || Math.abs(imgRatio - windowRatio) > 0.4) {
+                    bgImage.classList.remove('object-cover');
+                    bgImage.classList.add('object-contain');
+                    bgBlur.classList.remove('hidden'); 
+                } else {
+                    bgImage.classList.add('object-cover');
+                    bgImage.classList.remove('object-contain');
+                    bgBlur.classList.add('hidden'); 
+                }
+            }
+        }
+        window.addEventListener('load', adaptarFondo);
+        window.addEventListener('resize', adaptarFondo);
+
+    </script>
+</body>
+</html>
