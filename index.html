@@ -238,7 +238,6 @@
                     </div>
                 </div>
 
-                <!-- SLIDE 4 CON LA IMAGEN DE MONI AÑADIDA -->
                 <div class="slide">
                     <div class="paper-texture"></div>
                     <div class="absolute inset-[15px] pointer-events-none z-0">
@@ -260,7 +259,6 @@
                             <a href="https://www.google.com/maps/search/?api=1&query=Nilcunlauta+2727+San+Fernando+Chile" target="_blank" class="font-sans text-[8px] tracking-[0.2em] text-text-green uppercase border-b border-text-green/30 pb-0.5 hover:text-accent-gold hover:border-accent-gold transition-colors">Ver Mapa</a>
                         </div>
                         
-                        <!-- IMAGEN DE MONI -->
                         <img src="moni.png" alt="Perrita Moni" class="w-32 mt-2 object-contain drop-shadow-md z-10">
                     </div>
                 </div>
@@ -283,17 +281,25 @@
 
                 <div class="slide"><div class="paper-texture"></div><div class="absolute inset-[15px] pointer-events-none z-0"><div class="absolute inset-0 border border-accent-gold/80"></div><div class="absolute inset-[5px] border border-accent-gold/80 rounded-2xl"></div></div><div class="relative z-10 w-full flex flex-col items-center text-center px-6"><h2 class="font-script text-6xl text-text-green mb-4">Mesa de Regalos</h2><p class="font-serif text-text-green text-[14px] leading-relaxed italic mb-4 px-2 max-w-[310px]">"El mejor regalo es su compañía. Si desean entregarnos un obsequio, les agradeceríamos dinero para nuestros proyectos. Habrá un buzón, o pueden transferir a:"</p><div class="w-full max-w-[250px] bg-white/70 p-4 rounded-sm border border-accent-gold/40 shadow-sm mt-1"><div class="font-sans text-text-green/90 text-[8px] tracking-widest uppercase space-y-2 text-left px-3"><p><span class="font-semibold text-accent-gold">Nombre:</span> Paulette Fuenzalida H.</p><p><span class="font-semibold text-accent-gold">Banco:</span> Banco Estado</p><p><span class="font-semibold text-accent-gold">Cuenta:</span> 19.874.633-9</p><p><span class="font-semibold text-accent-gold">Cel:</span> +569 53244107</p></div></div></div></div>
 
+                <!-- SLIDE FORMULARIO RSVP ACTUALIZADO -->
                 <div class="slide">
                     <div class="paper-texture"></div>
                     <div class="absolute inset-[15px] pointer-events-none z-0"><div class="absolute inset-0 border border-accent-gold/80"></div><div class="absolute inset-[5px] border border-accent-gold/80 rounded-2xl"></div></div>
                     <div class="relative z-10 w-full flex flex-col items-center text-center px-6 pointer-events-auto">
                         <h2 class="font-script text-5xl text-text-green mb-6">¡Te esperamos!</h2>
                         <p class="font-sans text-accent-gold text-[10px] tracking-[0.15em] uppercase mb-8 font-semibold border-b border-accent-gold/30 pb-2">Responder antes del 1 de octubre</p>
+                        
                         <form id="rsvp-form" class="w-full max-w-[260px] text-center">
-                            <div id="dynamic-family-inputs" class="mb-6">
-                                <!-- El formulario se generará por JS -->
+                            <!-- Contenedor dinámico de familia -->
+                            <div id="dynamic-family-inputs" class="mb-2"></div>
+                            
+                            <!-- Nuevo input de canción -->
+                            <div class="mb-6 pt-3 w-full mx-auto text-left">
+                                <label for="song-request" class="block font-sans text-[8px] tracking-[0.2em] text-accent-gold uppercase mb-2 text-center font-semibold">Canción que no puede faltar (Opcional)</label>
+                                <input type="text" id="song-request" autocomplete="off" class="bg-transparent border-b border-accent-gold/40 px-2 py-1.5 w-full text-center font-serif text-text-green text-sm outline-none focus:border-text-green transition-all placeholder-text-green/40" placeholder="Ej: Danza Kuduro...">
                             </div>
-                            <button type="submit" class="bg-text-green text-white font-sans text-[10px] tracking-[0.2em] uppercase py-3 px-8 mt-6 hover:bg-[#1f2922] transition-colors w-full mx-auto block shadow-md">Confirmar</button>
+
+                            <button type="submit" class="bg-text-green text-white font-sans text-[10px] tracking-[0.2em] uppercase py-3 px-8 hover:bg-[#1f2922] transition-colors w-full mx-auto block shadow-md">Confirmar</button>
                         </form>
                     </div>
                 </div>
@@ -304,7 +310,6 @@
 
     <script>
         // ================= BASE DE DATOS LOCAL INTEGRADA ================= //
-        // Basada exactamente en las imágenes que enviaste.
         const RAW_GUEST_LIST = [
             { clave: "Marisol Hidalgo Valenzuela", familyDisplay: "Marisol Hidalgo", members: ["Marisol Hidalgo Valenzuela"] },
             { clave: "Sergio Fuenzalida Morales", familyDisplay: "Sergio Fuenzalida", members: ["Sergio Fuenzalida Morales"] },
@@ -469,7 +474,10 @@
                     </div>`;
             });
             container.innerHTML = html + `</div>`;
-            setTimeout(() => container.querySelectorAll('input').forEach(r => r.addEventListener('change', stopTimer)), 500);
+            setTimeout(() => {
+                container.querySelectorAll('input').forEach(r => r.addEventListener('change', stopTimer));
+                document.getElementById('song-request').addEventListener('input', stopTimer);
+            }, 500);
         }
 
         // ================= SISTEMA DEL LIBRO Y ANIMACIONES ================= //
@@ -519,8 +527,32 @@
         function nextSlide(manual = false) { if (manual) stopTimer(); if (currentSlide < slides.length - 1) showSlide(currentSlide + 1); }
         function prevSlide() { stopTimer(); if (currentSlide > 0) showSlide(currentSlide - 1); }
 
+        // ================= ENVÍO A WHATSAPP ================= //
         document.getElementById('rsvp-form').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            if (!matchedFamily) return;
+
+            // Armar el mensaje para WhatsApp
+            let mensaje = `¡Hola Mati y Poli! Confirmo la asistencia de la familia ${matchedFamily.familyDisplay}:\n\n`;
+            
+            matchedFamily.members.forEach((member, index) => {
+                const radio = document.querySelector(`input[name="att-${index}"]:checked`);
+                const status = radio ? radio.value : "No respondió";
+                mensaje += `- ${member}: ${status}\n`;
+            });
+
+            // Agregar la canción si se completó el campo
+            const song = document.getElementById('song-request').value.trim();
+            if (song) {
+                mensaje += `\n🎵 La canción que no puede faltar es: ${song}`;
+            }
+
+            // Codificar el mensaje y abrir WhatsApp
+            const urlWhatsapp = `https://api.whatsapp.com/send?phone=56953244107&text=${encodeURIComponent(mensaje)}`;
+            window.open(urlWhatsapp, '_blank');
+
+            // Mostrar mensaje de agradecimiento en la tarjeta
             this.innerHTML = `<div class="text-center py-6 mt-4"><p class="text-5xl font-script text-text-green mb-3">¡Gracias!</p><p class="font-sans text-accent-gold text-[10px] tracking-[0.3em] uppercase">Confirmado con éxito.</p></div>`;
         });
         
