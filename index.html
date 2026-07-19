@@ -171,12 +171,12 @@
 
     <!-- EL LIBRO Y LOS SLIDES -->
     <div id="video-container" class="fixed inset-0">
-        <div class="absolute inset-0 z-0 bg-[#2C3A30]">
-            <!-- Fondo con CSS para evitar problemas de rutas en repositorios -->
-            <div id="bg-blur" class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat opacity-50 blur-2xl transition-opacity duration-1000 hidden" style="background-image: url('./fondo.jpg');"></div>
-            <div id="bg-image" class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat opacity-80 transition-all duration-1000" style="background-image: url('./fondo.jpg');"></div>
+        <!-- Fondo claro sin filtros oscuros para que resalten las flores -->
+        <div class="absolute inset-0 z-0 bg-[#F9F8F3]">
+            <div id="bg-image" class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-all duration-1000 opacity-100" style="background-image: url('./fondo.jpg');"></div>
         </div>
-        <div class="absolute inset-0 bg-black/40 z-0 pointer-events-none"></div>
+        <!-- Capa semitransparente muy suave solo para que las letras se lean bien -->
+        <div class="absolute inset-0 bg-white/30 z-0 pointer-events-none"></div>
 
         <div class="book-container absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-[420px] h-[86vh] max-h-[800px] z-10">
             <div id="progress-container" class="progress-bar-container pointer-events-none"></div>
