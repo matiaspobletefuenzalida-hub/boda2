@@ -172,10 +172,11 @@
     <!-- EL LIBRO Y LOS SLIDES -->
     <div id="video-container" class="fixed inset-0">
         <div class="absolute inset-0 z-0 bg-[#2C3A30]">
-            <img src="fondo.jpg" id="bg-blur" class="absolute inset-0 w-full h-full object-cover opacity-50 blur-2xl transition-opacity duration-1000 hidden" alt="">
-            <img src="fondo.jpg" id="bg-image" class="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-1000" alt="">
+            <!-- Fondo con CSS para evitar problemas de rutas en repositorios -->
+            <div id="bg-blur" class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat opacity-50 blur-2xl transition-opacity duration-1000 hidden" style="background-image: url('./fondo.jpg');"></div>
+            <div id="bg-image" class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat opacity-80 transition-all duration-1000" style="background-image: url('./fondo.jpg');"></div>
         </div>
-        <div class="absolute inset-0 bg-black/30 z-0 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-black/40 z-0 pointer-events-none"></div>
 
         <div class="book-container absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-[420px] h-[86vh] max-h-[800px] z-10">
             <div id="progress-container" class="progress-bar-container pointer-events-none"></div>
@@ -243,11 +244,10 @@
 
     <script>
         // ================= BASE DE DATOS LOCAL INTEGRADA ================= //
-        // Basada exactamente en las imágenes que enviaste.
         const RAW_GUEST_LIST = [
             { clave: "Marisol Hidalgo Valenzuela", familyDisplay: "Marisol Hidalgo", members: ["Marisol Hidalgo Valenzuela"] },
             { clave: "Sergio Fuenzalida Morales", familyDisplay: "Sergio Fuenzalida", members: ["Sergio Fuenzalida Morales"] },
-            { clave: "Diego Fuenzalida", familyDisplay: "Diego y Carolina", members: ["Diego Fuenzalida Hidalgo", "Carlina Becker"] },
+            { clave: "Diego Fuenzalida", familyDisplay: "Diego y Carlina", members: ["Diego Fuenzalida Hidalgo", "Carlina Becker"] },
             { clave: "Ruperto Hidalgo", familyDisplay: "Ruperto y Rosa", members: ["Ruperto Hidalgo", "Rosa Valenzuela"] },
             { clave: "Robin Hidalgo", familyDisplay: "Familia Hidalgo Peralta", members: ["Robin Hidalgo", "Giovanna Peralta", "Giuliana Hidalgo", "Sofia Peralta"] },
             { clave: "Ariel Hidalgo", familyDisplay: "Familia Hidalgo", members: ["Ariel Hidalgo", "Alejandra", "Gissell Hidalgo", "Joaquin", "Ariel Hidalgo"] },
@@ -461,10 +461,6 @@
         document.getElementById('rsvp-form').addEventListener('submit', function(e) {
             e.preventDefault();
             this.innerHTML = `<div class="text-center py-6 mt-4"><p class="text-5xl font-script text-text-green mb-3">¡Gracias!</p><p class="font-sans text-accent-gold text-[10px] tracking-[0.3em] uppercase">Confirmado con éxito.</p></div>`;
-        });
-        
-        window.addEventListener('load', () => {
-            document.getElementById('bg-image').classList.add('object-cover');
         });
     </script>
 </body>
