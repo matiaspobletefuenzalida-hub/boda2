@@ -334,40 +334,49 @@
     <script>
         // ================= BASE DE DATOS LOCAL INTEGRADA ================= //
         const RAW_GUEST_LIST = [
-            { clave: "Marisol Hidalgo Valenzuela", familyDisplay: "Marisol Hidalgo", members: ["Marisol Hidalgo Valenzuela"] },
-            { clave: "Sergio Fuenzalida Morales", familyDisplay: "Sergio Fuenzalida", members: ["Sergio Fuenzalida Morales"] },
-            { clave: "Diego Fuenzalida", familyDisplay: "Diego y Carlina", members: ["Diego Fuenzalida Hidalgo", "Carlina Becker"] },
-            { clave: "Ruperto Hidalgo", familyDisplay: "Ruperto y Rosa", members: ["Ruperto Hidalgo", "Rosa Valenzuela"] },
-            { clave: "Robin Hidalgo", familyDisplay: "Familia Hidalgo Peralta", members: ["Robin Hidalgo", "Giovanna Peralta", "Giuliana Hidalgo", "Sofia Peralta"] },
-            { clave: "Ariel Hidalgo", familyDisplay: "Familia Hidalgo", members: ["Ariel Hidalgo", "Alejandra", "Gissell Hidalgo", "Joaquin", "Ariel Hidalgo"] },
-            { clave: "Patricio Hidalgo Valenzuela", familyDisplay: "Patricio y Ana", members: ["Patricio Hidalgo Valenzuela", "Ana Fuenzalida Morales"] },
-            { clave: "Roberto Fuenzalida", familyDisplay: "Familia Fuenzalida", members: ["Roberto Fuenzalida", "Carola", "Hijo", "Hija"] },
-            { clave: "Jaime Fuenzalida", familyDisplay: "Familia Fuenzalida", members: ["Jaime Fuenzalida", "Sandra", "Eli", "Jaime"] },
-            { clave: "Patricio Hidalgo", familyDisplay: "Familia Hidalgo", members: ["Patricio Hidalgo", "Consuelo", "Valentin", "Cris"] },
-            { clave: "Matias Hidalgo", familyDisplay: "Matias y Alison", members: ["Matias Hidalgo", "Alison"] },
-            { clave: "Alejandro Hidalgo", familyDisplay: "Familia Hidalgo", members: ["Alejandro Hidalgo", "Alejandro", "Mia"] },
-            { clave: "Ines Valenzuela", familyDisplay: "Inés y Esposo", members: ["Inés Valenzuela", "Esposo"] },
-            { clave: "Camila Hevia", familyDisplay: "Camila y Camilo", members: ["Camila Hevia", "Camilo"] },
+            { clave: "Sergio Fuenzalida", familyDisplay: "Sergio y Marisol", members: ["Sergio Fuenzalida Morales", "Marisol Hidalgo Valenzuela"] },
+            { clave: "Diego Fuenzalida", familyDisplay: "Diego y Acompañante", members: ["Diego Fuenzalida Hidalgo", "Acompañante"] },
+            { clave: "Ruperto Hidalgo", familyDisplay: "Ruperto y Rosa", members: ["Ruperto Hidalgo Gonzales", "Rosa Valenzuela Espinoza"] },
+            { clave: "Rodrigo Hidalgo", familyDisplay: "Familia Hidalgo Peralta", members: ["Rodrigo Hidalgo Valenzuela", "Giovanna Peralta", "Giuliana Hidalgo Peralta", "Sofia Peralta"] },
+            { clave: "Ariel Hidalgo", familyDisplay: "Familia Hidalgo Roman", members: ["Ariel Hidalgo Valenzuela", "Gissell Hidalgo Roman", "Alejandra Roman", "Ariel Hidalgo Roman", "Joaquin Hidalgo"] },
+            { clave: "Patricio Hidalgo", familyDisplay: "Patricio y Ana", members: ["Patricio Hidalgo Valenzuela", "Ana Fuenzalida Morales"] },
+            { clave: "Roberto Fuenzalida", familyDisplay: "Familia Fuenzalida", members: ["Roberto Fuenzalida Morales", "Carola", "Tomás Fuenzalida", "Isidora Fuenzalida"] },
+            { clave: "Jaime Fuenzalida", familyDisplay: "Familia Fuenzalida Gomez", members: ["Jaime Fuenzalida Morales", "Sandra Gomez", "Elizabeth Fuenzalida Gomez", "Jaime Fuenzalida Gomez"] },
+            { clave: "Patricio Hidalgo Fuenzalida", familyDisplay: "Familia Hidalgo", members: ["Patricio Hidalgo Fuenzalida", "Consuelo", "Cristobal", "Valentín Hidalgo"] },
+            { clave: "Matias Hidalgo", familyDisplay: "Matias y Alison", members: ["Matias Hidalgo Fuenzalida", "Alison"] },
+            { clave: "Alejandro Hidalgo", familyDisplay: "Familia Hidalgo", members: ["Alejandro Hidalgo Fuenzalida", "Alejandro Hidalgo", "Mia Hidalgo"] },
+            { clave: "Inés Valenzuela", familyDisplay: "Inés y Carlos", members: ["Inés Valenzuela", "Carlos"] },
+            { clave: "Camila Hevia", familyDisplay: "Camila y Camilo", members: ["Camila Hevia", "Camilo Silva"] },
             { clave: "Tahia Lloyd", familyDisplay: "Tahia y Esposo", members: ["Tahia Lloyd", "Esposo"] },
-            { clave: "Maria Jose Fuentealba", familyDisplay: "Maria Jose y Aldo", members: ["Maria Jose Fuentealba", "Aldo"] },
-            { clave: "Ignacia Miranda", familyDisplay: "Ignacia y Pololo", members: ["Ignacia Miranda", "Pololo"] },
+            { clave: "Maria Jose Fuentealba", familyDisplay: "Maria Jose y Acompañante", members: ["Maria Jose Fuentealba", "Acompañante"] },
+            { clave: "Ignacia Miranda", familyDisplay: "Ignacia y Pareja", members: ["Ignacia Miranda", "Pareja"] },
             { clave: "Montserrat Lufin", familyDisplay: "Montserrat Lufin", members: ["Montserrat Lufin"] },
             { clave: "Daniela Hernandez", familyDisplay: "Daniela y Luis", members: ["Daniela Hernandez", "Luis"] },
-            { clave: "Teresa", familyDisplay: "Teresa y Javi", members: ["Teresa", "Javi"] },
-            { clave: "Tia Maria", familyDisplay: "Tía María y Andrés", members: ["Tía María", "Andrés Hidalgo"] },
-            { clave: "Eduardo Poblete Arias", familyDisplay: "Eduardo Poblete", members: ["Eduardo Poblete Arias"] },
-            { clave: "Anais Poblete", familyDisplay: "Anais Poblete", members: ["Anais Poblete"] },
-            { clave: "Eduardo Poblete Fuenzalida", familyDisplay: "Eduardo y Kathy", members: ["Eduardo Poblete Fuenzalida", "Kathy"] },
-            { clave: "Nataly Fuenzalida", familyDisplay: "Familia Fuenzalida", members: ["Nataly Fuenzalida", "Leo", "Leito", "Cata"] },
-            { clave: "Emili Fuenzalida", familyDisplay: "Emili, Tomas y Aurora", members: ["Emili Fuenzalida", "Tomas", "Aurora"] },
-            { clave: "Daniel", familyDisplay: "Daniel y Gaby", members: ["Daniel", "Gaby"] },
-            { clave: "Victor Fuenzalida Celis", familyDisplay: "Familia Fuenzalida", members: ["Victor Fuenzalida Celis", "Maribel", "Camila"] },
-            { clave: "Juan Fuenzalida", familyDisplay: "Familia Fuenzalida", members: ["Juan Fuenzalida", "Erika", "Alison", "Madelyn"] },
-            { clave: "Gabriela", familyDisplay: "Gabriela y Orlando", members: ["Gabriela", "Orlando"] },
-            { clave: "Margarita Celis", familyDisplay: "Margarita Celis", members: ["Margarita Celis"] },
-            { clave: "Victor Fuenzalida", familyDisplay: "Victor Fuenzalida", members: ["Victor Fuenzalida"] },
-            { clave: "Mairon", familyDisplay: "Mairon", members: ["Mairon"] },
-            { clave: "Manuel Venegas", familyDisplay: "Manuel Venegas", members: ["Manuel Venegas"] }
+            { clave: "Teresa Maluje", familyDisplay: "Teresa y Acompañante", members: ["Teresa Maluje", "Acompañante"] },
+            { clave: "Jorge Hidalgo", familyDisplay: "Jorge y Paulina", members: ["Jorge Hidalgo", "Paulina Gonzalez"] },
+            { clave: "María Farias", familyDisplay: "María y Andrés", members: ["María Farias Peña", "Andrés Hidalgo"] },
+            { clave: "Andrea Fuenzalida", familyDisplay: "Familia de Andrea", members: ["Andrea Fuenzalida", "Familia Andrea 1", "Familia Andrea 2", "Familia Andrea 3"] },
+            { clave: "Eduardo Poblete", familyDisplay: "Familia Poblete Fuenzalida", members: ["Eduardo Poblete Arias", "Elizabeth Fuenzalida Celis", "Anais Poblete Fuenzalida"] },
+            { clave: "Naida Celis", familyDisplay: "Naida Celis", members: ["Naida Celis"] },
+            { clave: "Nataly Fuenzalida", familyDisplay: "Familia Perez Fuenzalida", members: ["Leonardo Perez", "Nataly Fuenzalida", "Lonardo Perez Fuenzalida", "Catalina Perez"] },
+            { clave: "Emili Fuenzalida", familyDisplay: "Emili, Tomas y Aurora", members: ["Emili Fuenzalida", "Tomas Mora", "Aurora Mora"] },
+            { clave: "Daniel Fuenzalida", familyDisplay: "Daniel y Gabriela", members: ["Daniel Fuenzalida", "Gabriela Peñaloza"] },
+            { clave: "Victor Fuenzalida Celis", familyDisplay: "Familia Fuenzalida Quezada", members: ["Victor Fuenzalida Celis", "Maribel Quezada", "Camila Fuenzalida"] },
+            { clave: "Juan Fuenzalida", familyDisplay: "Familia Fuenzalida Jeldrez", members: ["Juan Fuenzalida", "Erika Jeldrez", "Alison Fuenzalida", "Madelyn Fuenzalida"] },
+            { clave: "Gabriela Arias", familyDisplay: "Gabriela y Orlando", members: ["Gabriela Arias Farias", "Orlando Vasquez"] },
+            { clave: "Margarita Celis", familyDisplay: "Margarita Celis", members: ["Margarita Celis Venegas"] },
+            { clave: "Victor Fuenzalida Brito", familyDisplay: "Victor Fuenzalida", members: ["Victor Fuenzalida Brito"] },
+            { clave: "Manuel", familyDisplay: "Manuel", members: ["Manuel"] },
+            { clave: "Mayron Quintana", familyDisplay: "Mayron Quintana", members: ["Mayron Quintana"] },
+            { clave: "Felipe Riveros", familyDisplay: "Felipe y Acompañante", members: ["Felipe Riveros", "Acompañante"] },
+            { clave: "Nelson Alcaino", familyDisplay: "Nelson y Acompañante", members: ["Nelson Alcaino", "Acompañante"] },
+            { clave: "Claudia Palacios", familyDisplay: "Claudia y Acompañante", members: ["Claudia Palacios", "Acompañante"] },
+            { clave: "Katherine Hevia", familyDisplay: "Katherine y Acompañante", members: ["Katherine Hevia", "Acompañante"] },
+            { clave: "María Inés Carreño", familyDisplay: "María Inés Carreño", members: ["María Inés Carreño"] },
+            { clave: "Matías Poblete", familyDisplay: "Matías y Paulette", members: ["Matías Poblete", "Paulette Fuenzalida"] },
+            { clave: "Rodrigo Perez", familyDisplay: "Rodrigo y Grace", members: ["Rodrigo Perez", "Grace Meneses"] },
+            { clave: "Soledad Sandoval", familyDisplay: "Soledad y Acompañante", members: ["Soledad Sandoval", "Acompañante"] },
+            { clave: "Paula Hidalgo", familyDisplay: "Paula y Maria Isabel", members: ["Paula Hidalgo", "Maria Isabel Diaz"] }
         ];
 
         // Función para limpiar texto y permitir búsquedas sin tildes ni mayúsculas
@@ -416,12 +425,22 @@
             if (matches.length > 0) {
                 autocompleteList.classList.remove('hidden');
                 matches.forEach(match => {
+                    // Aquí es donde determinamos qué nombre mostrar en el desplegable
+                    let matchedName = match.clave;
+                    const foundMember = match.members.find(member => cleanText(member).includes(val));
+                    
+                    if (foundMember) {
+                        matchedName = foundMember; // Si buscaron a un acompañante, muestra su nombre
+                    } else if (match.cleanDisplay.includes(val)) {
+                        matchedName = match.familyDisplay;
+                    }
+
                     const div = document.createElement('div');
                     div.className = "px-4 py-3 hover:bg-[#EBE7DF] cursor-pointer border-b border-accent-gold/20 text-text-green font-serif transition-colors";
-                    div.innerHTML = `<strong>${match.clave}</strong> <span class="text-[10px] text-accent-gold ml-2 font-sans tracking-widest uppercase">(${match.familyDisplay})</span>`;
+                    div.innerHTML = `<strong>${matchedName}</strong> <span class="text-[10px] text-accent-gold ml-2 font-sans tracking-widest uppercase">(${match.familyDisplay})</span>`;
                     
                     div.addEventListener('click', function() {
-                        guestInput.value = match.clave;
+                        guestInput.value = matchedName; // Deja el nombre del acompañante en el input
                         matchedFamily = match; 
                         autocompleteList.classList.add('hidden');
                     });
@@ -443,7 +462,13 @@
             const guestNameInputValue = guestInput.value.trim();
             
             if (!matchedFamily) {
-                matchedFamily = GUEST_LIST.find(g => g.cleanClave === cleanText(guestNameInputValue)) || null;
+                // Ahora busca correctamente en todos los miembros si le dan a "Entrar" directamente
+                const cleanedInput = cleanText(guestNameInputValue);
+                matchedFamily = GUEST_LIST.find(g => 
+                    g.cleanClave === cleanedInput || 
+                    g.cleanDisplay === cleanedInput ||
+                    g.members.some(member => cleanText(member) === cleanedInput)
+                ) || null;
             }
 
             if (!matchedFamily) {
