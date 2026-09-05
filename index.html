@@ -155,7 +155,7 @@
             <div class="flex flex-col sm:flex-row items-center sm:items-start justify-center gap-4 relative">
                 <!-- Buscador con Desplegable -->
                 <div class="relative w-full sm:w-64 text-center sm:text-left">
-                    <input type="text" id="guest-name" autocomplete="off" class="bg-transparent border-b border-accent-gold/60 px-4 py-2 w-full text-center font-serif text-text-green text-xl outline-none focus:border-text-green transition-all placeholder-text-green/30" placeholder="Ej: Alejandro...">
+                    <input type="text" id="guest-name" autocomplete="off" class="bg-transparent border-b border-accent-gold/60 px-4 py-2 w-full text-center font-serif text-text-green text-xl outline-none focus:border-text-green transition-all placeholder-text-green/30" placeholder="Ej: Matias...">
                     
                     <!-- Contenedor de sugerencias -->
                     <div id="autocomplete-list" class="absolute z-50 w-full bg-[#F9F8F3] border border-accent-gold/40 max-h-40 overflow-y-auto hidden rounded-b-sm shadow-xl text-sm font-sans text-left mt-1">
@@ -293,12 +293,17 @@
                         <h2 class="font-script text-6xl text-text-green mb-4">Mesa de Regalos</h2>
                         <p class="font-serif text-text-green text-[14px] leading-relaxed italic mb-4 px-2 max-w-[310px]">"El mejor regalo es su compañía. Si desean entregarnos un obsequio, les agradeceríamos dinero para nuestros proyectos. Habrá un buzón, o pueden transferir a:"</p>
                         
-                        <div class="w-full max-w-[250px] bg-white/70 p-4 rounded-sm border border-accent-gold/40 shadow-sm mt-1">
-                            <div class="font-sans text-text-green/90 text-[8px] tracking-widest uppercase space-y-2 text-left px-3">
+                        <div class="w-full max-w-[280px] bg-white/70 p-3 rounded-sm border border-accent-gold/40 shadow-sm mt-1">
+                            <div class="font-sans text-text-green/90 text-[8px] tracking-widest uppercase space-y-1 text-left px-2">
                                 <p><span class="font-semibold text-accent-gold">Nombre:</span> Paulette Fuenzalida H.</p>
-                                <p><span class="font-semibold text-accent-gold">Banco:</span> Banco Estado</p>
-                                <p><span class="font-semibold text-accent-gold">Cuenta:</span> 19.874.633-9</p>
+                                <p><span class="font-semibold text-accent-gold">Banco:</span> Banco Estado &nbsp;|&nbsp; <span class="font-semibold text-accent-gold">Cta:</span> 19.874.633-9</p>
                                 <p><span class="font-semibold text-accent-gold">Cel:</span> +569 53244107</p>
+                                
+                                <div class="w-full h-[1px] bg-accent-gold/30 my-2"></div>
+                                
+                                <p><span class="font-semibold text-accent-gold">Nombre:</span> Matias Poblete Fuenzalida</p>
+                                <p><span class="font-semibold text-accent-gold">Banco:</span> Banco Estado &nbsp;|&nbsp; <span class="font-semibold text-accent-gold">Cta:</span> 19.275.751-7</p>
+                                <p><span class="font-semibold text-accent-gold">Cel:</span> +569 30350248</p>
                             </div>
                         </div>
                     </div>
@@ -396,7 +401,7 @@
         let slides = [];
         let progressSegments = [];
         let slideInterval;
-        const timePerSlide = 8500; 
+        const timePerSlide = 12000; 
         let progressAnimation;
 
         // ================= LÓGICA DEL AUTOCOMPLETADO ================= //
