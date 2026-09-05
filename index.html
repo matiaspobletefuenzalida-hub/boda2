@@ -113,14 +113,35 @@
         .progress-fill { height: 100%; width: 0%; background: #C5A87C; transition: width 0.1s linear; }
         .progress-segment.completed .progress-fill { width: 100%; }
 
+        /* Estilos actualizados y más notorios para los botones de navegación */
         .nav-button {
-            position: absolute; top: 50%; transform: translateY(-50%); z-index: 60; width: 35px; height: 35px; border-radius: 50%;
-            background: rgba(197, 168, 124, 0.15); border: 1px solid rgba(197, 168, 124, 0.3); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
-            color: rgba(44, 58, 48, 0.6); cursor: pointer; transition: all 0.3s ease;
+            position: absolute; top: 50%; transform: translateY(-50%); z-index: 60; width: 42px; height: 42px; border-radius: 50%;
+            background: #F9F8F3; border: 1px solid rgba(197, 168, 124, 0.5); box-shadow: 0 4px 10px rgba(0,0,0,0.15); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
+            color: #C5A87C; cursor: pointer; transition: all 0.3s ease; opacity: 0.95;
         }
-        .nav-button:hover { background: rgba(197, 168, 124, 0.4); color: rgba(44, 58, 48, 1); }
-        .nav-button.left { left: 10px; }
-        .nav-button.right { right: 10px; }
+        .nav-button:hover { background: #F9F8F3; color: #2C3A30; transform: translateY(-50%) scale(1.05); }
+        .nav-button svg { width: 22px; height: 22px; stroke-width: 1.5; }
+        .nav-button.left { left: 8px; }
+        .nav-button.right { right: 8px; }
+
+        /* Mensaje flotante animado de ayuda */
+        @keyframes hintFade {
+            0% { opacity: 0; bottom: 15px; }
+            10% { opacity: 1; bottom: 30px; }
+            80% { opacity: 1; bottom: 30px; }
+            100% { opacity: 0; bottom: 15px; pointer-events: none; }
+        }
+        .nav-hint {
+            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); z-index: 70;
+            background: rgba(249, 248, 243, 0.95); padding: 8px 18px; border-radius: 20px;
+            font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em;
+            color: #C5A87C; border: 1px solid rgba(197, 168, 124, 0.4); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            pointer-events: none; opacity: 0; white-space: nowrap;
+        }
+        .nav-hint.show {
+            animation: hintFade 7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: 1.5s;
+        }
     </style>
 </head>
 <body class="selection:bg-[#C5A87C] selection:text-white">
@@ -180,8 +201,13 @@
 
         <div class="book-container absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-[420px] h-[86vh] max-h-[800px] z-10">
             <div id="progress-container" class="progress-bar-container pointer-events-none"></div>
-            <div class="nav-button left" onclick="prevSlide()"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"></path></svg></div>
-            <div class="nav-button right" onclick="nextSlide(true)"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"></path></svg></div>
+            
+            <!-- Botones de navegación actualizados sin las clases w-5 h-5 de tailwind para controlar desde CSS -->
+            <div class="nav-button left" onclick="prevSlide()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg></div>
+            <div class="nav-button right" onclick="nextSlide(true)"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg></div>
+
+            <!-- Mensaje temporal flotante -->
+            <div id="nav-hint-msg" class="nav-hint">Presiona las flechas para avanzar ➔</div>
 
             <div id="slides-container" class="absolute inset-0 w-full h-full">
                 
@@ -248,7 +274,7 @@
                         <div class="flex flex-col items-center pointer-events-auto">
                             <p class="font-sans text-accent-gold text-[8px] tracking-[0.3em] uppercase mb-1.5">Ceremonia • 20:00 h.</p>
                             <h3 class="font-serif text-text-green text-2xl leading-tight mb-2">Parroquia<br>San Agustín</h3>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Parroquia+San+Agustin+Argomedo+330+San+Fernando+Chile" target="_blank" class="font-sans text-[8px] tracking-[0.2em] text-text-green uppercase border-b border-text-green/30 pb-0.5 hover:text-accent-gold hover:border-accent-gold transition-colors">Ver Mapa</a>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Argomedo+330,+3071080+San+Fernando,+O'Higgins" target="_blank" class="font-sans text-[8px] tracking-[0.2em] text-text-green uppercase border-b border-text-green/30 pb-0.5 hover:text-accent-gold hover:border-accent-gold transition-colors">Ver Mapa</a>
                         </div>
                         
                         <div class="elegant-divider my-0"></div>
@@ -290,19 +316,20 @@
                         <!-- Foto de Micky añadida aquí arriba -->
                         <img src="micky.png" alt="Perrito Micky" class="w-48 mb-2 object-contain drop-shadow-md z-10">
                         
-                        <h2 class="font-script text-6xl text-text-green mb-4">Mesa de Regalos</h2>
-                        <p class="font-serif text-text-green text-[14px] leading-relaxed italic mb-4 px-2 max-w-[310px]">"El mejor regalo es su compañía. Si desean entregarnos un obsequio, les agradeceríamos dinero para nuestros proyectos. Habrá un buzón, o pueden transferir a:"</p>
+                        <h2 class="font-script text-6xl text-text-green mb-2">Mesa de Regalos</h2>
+                        <p class="font-serif text-text-green text-[13px] leading-relaxed italic mb-3 px-2 max-w-[310px]">"El mejor regalo es su compañía. Si desean entregarnos un obsequio, les agradeceríamos dinero para nuestros proyectos. Habrá un buzón, o pueden transferir a:"</p>
                         
-                        <div class="w-full max-w-[280px] bg-white/70 p-3 rounded-sm border border-accent-gold/40 shadow-sm mt-1">
-                            <div class="font-sans text-text-green/90 text-[8px] tracking-widest uppercase space-y-1 text-left px-2">
+                        <div class="w-full max-w-[270px] bg-white/70 p-3 rounded-sm border border-accent-gold/40 shadow-sm mt-1">
+                            <div class="font-sans text-text-green/90 text-[7px] sm:text-[8px] tracking-widest uppercase space-y-1 text-left px-2 border-b border-accent-gold/30 pb-2 mb-2">
                                 <p><span class="font-semibold text-accent-gold">Nombre:</span> Paulette Fuenzalida H.</p>
-                                <p><span class="font-semibold text-accent-gold">Banco:</span> Banco Estado &nbsp;|&nbsp; <span class="font-semibold text-accent-gold">Cta:</span> 19.874.633-9</p>
+                                <p><span class="font-semibold text-accent-gold">Banco:</span> Banco Estado</p>
+                                <p><span class="font-semibold text-accent-gold">Cuenta:</span> 19.874.633-9</p>
                                 <p><span class="font-semibold text-accent-gold">Cel:</span> +569 53244107</p>
-                                
-                                <div class="w-full h-[1px] bg-accent-gold/30 my-2"></div>
-                                
-                                <p><span class="font-semibold text-accent-gold">Nombre:</span> Matias Poblete Fuenzalida</p>
-                                <p><span class="font-semibold text-accent-gold">Banco:</span> Banco Estado &nbsp;|&nbsp; <span class="font-semibold text-accent-gold">Cta:</span> 19.275.751-7</p>
+                            </div>
+                            <div class="font-sans text-text-green/90 text-[7px] sm:text-[8px] tracking-widest uppercase space-y-1 text-left px-2">
+                                <p><span class="font-semibold text-accent-gold">Nombre:</span> Matías Poblete F.</p>
+                                <p><span class="font-semibold text-accent-gold">Banco:</span> Banco Estado</p>
+                                <p><span class="font-semibold text-accent-gold">Cuenta:</span> 19.275.751-7</p>
                                 <p><span class="font-semibold text-accent-gold">Cel:</span> +569 30350248</p>
                             </div>
                         </div>
@@ -544,6 +571,12 @@
                 progressContainer.appendChild(seg); progressSegments.push(document.getElementById('fill-'+index));
             });
             showSlide(0);
+
+            // Activar la animación del cartel de ayuda
+            setTimeout(() => {
+                const hintMsg = document.getElementById('nav-hint-msg');
+                if (hintMsg) hintMsg.classList.add('show');
+            }, 500);
         }
 
         function showSlide(index) {
