@@ -212,23 +212,21 @@
             <div id="slides-container" class="absolute inset-0 w-full h-full">
                 
                 <div class="slide">
-                    <!-- NUEVO FONDO DE IMAGEN CON EFECTO ACLARADO AÑADIDO -->
                     <div class="absolute inset-0 z-0 overflow-hidden rounded-[4px]">
                         <img src="image_163243.png" alt="Fondo Nos Casamos" class="absolute inset-0 w-full h-full object-cover contrast-[1.15] saturate-[1.1]">
-                        <!-- Capa superpuesta con un gradiente transparente arriba y suave crema abajo -->
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/30 to-[#F9F8F3]/95"></div>
+                        <!-- Gradiente sutil oscuro abajo para replicar el estilo de la foto de referencia -->
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50 z-10"></div>
                     </div>
 
                     <div class="paper-texture z-0"></div>
-                    <div class="absolute inset-[15px] pointer-events-none z-0"><div class="absolute inset-0 border border-accent-gold/80"></div><div class="absolute inset-[5px] border border-accent-gold/80 rounded-2xl"></div></div>
-                    <div class="relative z-10 flex flex-col items-center text-center mt-28">
-                        <p class="font-serif italic text-text-green text-3xl mb-2 drop-shadow-md">¡Nos casamos!</p>
-                        <div class="flex flex-col items-center">
-                            <h1 class="font-script text-gold-subtle text-8xl leading-none drop-shadow-md">Mati</h1>
-                            <span class="font-serif text-gold-subtle text-4xl not-italic font-medium -my-3 drop-shadow-md z-10">&</span>
-                            <h1 class="font-script text-gold-subtle text-8xl leading-none drop-shadow-md">Poli</h1>
-                        </div>
-                        <div class="elegant-divider mt-6"></div>
+                    
+                    <!-- Textos posicionados en la zona inferior con tipografía blanca, simulando la referencia -->
+                    <div class="absolute bottom-[10%] left-0 w-full z-20 flex flex-col items-center text-center px-4">
+                        <p class="font-sans text-white tracking-[0.3em] uppercase text-[11px] mb-1 drop-shadow-lg font-medium">Nos casamos</p>
+                        
+                        <h1 class="font-script text-white text-[4.5rem] leading-none drop-shadow-lg my-1">Mati y Poli</h1>
+                        
+                        <p class="font-sans text-white tracking-[0.2em] uppercase text-[12px] mt-4 drop-shadow-lg font-medium">14 de Noviembre 2026</p>
                     </div>
                 </div>
 
